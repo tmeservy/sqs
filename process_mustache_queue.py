@@ -3,6 +3,8 @@ import botocore
 import json
 import mustache
 import time
+import os
+import shutil
 
 # Get the service resource
 sqs = boto3.resource('sqs')
@@ -31,6 +33,7 @@ while True:
         #setup s3 object and download file
         s3 = boto3.resource('s3')
         downloadfilepath = "./temp/"+filename
+        os.mkdir("./temp/")
 
         try:
             s3.Bucket(bucket).download_file(filename, downloadfilepath)
@@ -54,4 +57,5 @@ while True:
 
         message.delete()
 
-        #os.remove("./temp/*.*")
+        #clean up the files that were processed
+        shutil.rmtree('./temp/')
